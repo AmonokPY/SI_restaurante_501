@@ -1,0 +1,243 @@
+{% extends 'gestion/base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+
+    <h2>Mesas</h2>
+
+    <div class="form-block">
+    <input type="hidden" id="id">
+
+    <input type="number"
+           id="numero_mesa"
+           placeholder="Número Mesa"
+           min="1">
+
+    <input type="number"
+           id="capacidad"
+           placeholder="Capacidad"
+           min="1">
+
+    <select id="estado_mesa" title="Estado de la mesa">
+        <option value="Disponible">Disponible</option>
+        <option value="Ocupada">Ocupada</option>
+        <option value="Reservada">Reservada</option>
+    </select>
+
+    <button class="add"
+            onclick="guardar()">
+
+        Guardar
+
+    </button>
+    </div>
+
+    <div class="table-wrap">
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>Número Mesa</th>
+                <th>Capacidad</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="tabla"></tbody>
+
+    </table>
+    </div>
+
+</div>
+
+<script>
+
+const API = "/api/mesas/";
+
+// =========================
+// CARGAR
+// =========================
+
+async function cargar() {
+
+    const res = await fetch(API);
+
+    const data = await res.json();
+
+    const tabla = document.getElementById("tabla");
+
+    tabla.innerHTML = "";
+
+    data.forEach(mesa => {
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>${mesa.id}</td>
+
+            <td>${mesa.numero_mesa}</td>
+
+            <td>${mesa.capacidad}</td>
+
+            <td>${mesa.estado_mesa}</td>
+
+            <td>
+
+                <button class="update"
+
+                    onclick="editar(
+                        ${mesa.id},
+                        ${mesa.numero_mesa},
+                        ${mesa.capacidad},
+                        '${mesa.estado_mesa}'
+                    )">
+
+                    Editar
+
+                </button>
+
+                <button class="delete"
+
+                    onclick="eliminar(${mesa.id})">
+
+                    Eliminar
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+    });
+}
+
+// =========================
+// GUARDAR
+// =========================
+
+async function guardar() {
+
+    const id =
+        document.getElementById("id").value;
+
+    const data = {
+
+        numero_mesa:
+            document.getElementById("numero_mesa").value,
+
+        capacidad:
+            document.getElementById("capacidad").value,
+
+        estado_mesa:
+            document.getElementById("estado_mesa").value
+    };
+
+    // UPDATE
+
+    if (id) {
+
+        await fetch(API + id + "/", {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+
+    }
+
+    // CREATE
+
+    else {
+
+        await fetch(API, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+    }
+
+    limpiar();
+
+    cargar();
+}
+
+// =========================
+// EDITAR
+// =========================
+
+function editar(
+    id,
+    numero_mesa,
+    capacidad,
+    estado_mesa
+) {
+
+    document.getElementById("id").value = id;
+
+    document.getElementById("numero_mesa").value = numero_mesa;
+
+    document.getElementById("capacidad").value = capacidad;
+
+    document.getElementById("estado_mesa").value = estado_mesa;
+}
+
+// =========================
+// ELIMINAR
+// =========================
+
+async function eliminar(id) {
+
+    if (confirm("¿Eliminar mesa?")) {
+
+        await fetch(API + id + "/", {
+
+            method: "DELETE"
+        });
+
+        cargar();
+    }
+}
+
+// =========================
+// LIMPIAR
+// =========================
+
+function limpiar() {
+
+    document.getElementById("id").value = "";
+
+    document.getElementById("numero_mesa").value = "";
+
+    document.getElementById("capacidad").value = "";
+
+    document.getElementById("estado_mesa").value = "Disponible";
+}
+
+// =========================
+// INICIAR
+// =========================
+
+cargar();
+
+</script>
+
+{% endblock %}

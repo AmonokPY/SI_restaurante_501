@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Acceso{% endblock %} · Pasta La Vista</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'gestion/css/estilos.css' %}">
+</head>
+<body>
+    <header>
+        <h1>Pasta La Vista</h1>
+        <p class="header-subtitle">Acceso de administradores</p>
+    </header>
+
+    <div class="contenedor">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="message message-{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>

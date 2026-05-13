@@ -1,0 +1,280 @@
+{% extends 'gestion/base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+
+    <h2>Órdenes</h2>
+
+    <div class="form-block">
+    <input type="hidden" id="id">
+
+    <input type="number"
+           id="cliente_id"
+           placeholder="ID Cliente"
+           min="1">
+
+    <input type="number"
+           id="empleado_id"
+           placeholder="ID Empleado"
+           min="1">
+
+    <input type="number"
+           id="mesa_id"
+           placeholder="ID Mesa"
+           min="1">
+
+    <select id="estado_orden" title="Estado de la orden">
+        <option value="Activa">Activa</option>
+        <option value="En preparación">En preparación</option>
+        <option value="Entregada">Entregada</option>
+        <option value="Facturada">Facturada</option>
+        <option value="Cancelada">Cancelada</option>
+    </select>
+
+    <input type="number"
+           id="total"
+           placeholder="Total"
+           step="0.01"
+           min="0">
+
+    <button class="add"
+            onclick="guardar()">
+
+        Guardar
+
+    </button>
+    </div>
+
+    <div class="table-wrap">
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>ID Cliente</th>
+                <th>ID Empleado</th>
+                <th>ID Mesa</th>
+                <th>Estado</th>
+                <th>Total</th>
+                <th>Acciones</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="tabla"></tbody>
+
+    </table>
+    </div>
+
+</div>
+
+<script>
+
+const API = "/api/ordenes/";
+
+// =========================
+// CARGAR
+// =========================
+
+async function cargar() {
+
+    const res = await fetch(API);
+
+    const data = await res.json();
+
+    const tabla = document.getElementById("tabla");
+
+    tabla.innerHTML = "";
+
+    data.forEach(orden => {
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>${orden.id}</td>
+
+            <td>${orden.cliente_id}</td>
+
+            <td>${orden.empleado_id}</td>
+
+            <td>${orden.mesa_id}</td>
+
+            <td>${orden.estado_orden}</td>
+
+            <td>${orden.total}</td>
+
+            <td>
+
+                <button class="update"
+
+                    onclick="editar(
+                        ${orden.id},
+                        ${orden.cliente_id},
+                        ${orden.empleado_id},
+                        ${orden.mesa_id},
+                        '${orden.estado_orden}',
+                        ${orden.total}
+                    )">
+
+                    Editar
+
+                </button>
+
+                <button class="delete"
+
+                    onclick="eliminar(${orden.id})">
+
+                    Eliminar
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+    });
+}
+
+// =========================
+// GUARDAR
+// =========================
+
+async function guardar() {
+
+    const id =
+        document.getElementById("id").value;
+
+    const data = {
+
+        cliente_id:
+            document.getElementById("cliente_id").value,
+
+        empleado_id:
+            document.getElementById("empleado_id").value,
+
+        mesa_id:
+            document.getElementById("mesa_id").value,
+
+        estado_orden:
+            document.getElementById("estado_orden").value,
+
+        total:
+            document.getElementById("total").value
+    };
+
+    // UPDATE
+
+    if (id) {
+
+        await fetch(API + id + "/", {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+
+    }
+
+    // CREATE
+
+    else {
+
+        await fetch(API, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+    }
+
+    limpiar();
+
+    cargar();
+}
+
+// =========================
+// EDITAR
+// =========================
+
+function editar(
+    id,
+    cliente_id,
+    empleado_id,
+    mesa_id,
+    estado_orden,
+    total
+) {
+
+    document.getElementById("id").value = id;
+
+    document.getElementById("cliente_id").value = cliente_id;
+
+    document.getElementById("empleado_id").value = empleado_id;
+
+    document.getElementById("mesa_id").value = mesa_id;
+
+    document.getElementById("estado_orden").value = estado_orden;
+
+    document.getElementById("total").value = total;
+}
+
+// =========================
+// ELIMINAR
+// =========================
+
+async function eliminar(id) {
+
+    if (confirm("¿Eliminar orden?")) {
+
+        await fetch(API + id + "/", {
+
+            method: "DELETE"
+        });
+
+        cargar();
+    }
+}
+
+// =========================
+// LIMPIAR
+// =========================
+
+function limpiar() {
+
+    document.getElementById("id").value = "";
+
+    document.getElementById("cliente_id").value = "";
+
+    document.getElementById("empleado_id").value = "";
+
+    document.getElementById("mesa_id").value = "";
+
+    document.getElementById("estado_orden").value = "Activa";
+
+    document.getElementById("total").value = "";
+}
+
+// =========================
+// INICIAR
+// =========================
+
+cargar();
+
+</script>
+
+{% endblock %}

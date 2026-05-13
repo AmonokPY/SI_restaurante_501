@@ -1,0 +1,275 @@
+{% extends 'gestion/base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+
+    <h2>Platos</h2>
+
+    <div class="form-block">
+    <input type="hidden" id="id">
+
+    <input type="text"
+           id="nombre_plato"
+           placeholder="Nombre Plato">
+
+    <textarea id="descripcion"
+              rows="2"
+              placeholder="Descripción"></textarea>
+
+    <input type="number"
+           id="precio"
+           placeholder="Precio"
+           step="0.01"
+           min="0">
+
+    <input type="text"
+           id="categoria"
+           placeholder="Categoría">
+
+    <select id="disponible" title="Disponible">
+        <option value="true">Sí</option>
+        <option value="false">No</option>
+    </select>
+
+    <button class="add"
+            onclick="guardar()">
+
+        Guardar
+
+    </button>
+    </div>
+
+    <div class="table-wrap">
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Categoría</th>
+                <th>Disponible</th>
+                <th>Acciones</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="tabla"></tbody>
+
+    </table>
+    </div>
+
+</div>
+
+<script>
+
+const API = "/api/platos/";
+
+// =========================
+// CARGAR
+// =========================
+
+async function cargar() {
+
+    const res = await fetch(API);
+
+    const data = await res.json();
+
+    const tabla = document.getElementById("tabla");
+
+    tabla.innerHTML = "";
+
+    data.forEach(plato => {
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>${plato.id}</td>
+
+            <td>${plato.nombre_plato}</td>
+
+            <td>${plato.descripcion}</td>
+
+            <td>${plato.precio}</td>
+
+            <td>${plato.categoria}</td>
+
+            <td>${plato.disponible}</td>
+
+            <td>
+
+                <button class="update"
+
+                    onclick="editar(
+                        ${plato.id},
+                        '${plato.nombre_plato}',
+                        '${plato.descripcion}',
+                        ${plato.precio},
+                        '${plato.categoria}',
+                        '${plato.disponible}'
+                    )">
+
+                    Editar
+
+                </button>
+
+                <button class="delete"
+
+                    onclick="eliminar(${plato.id})">
+
+                    Eliminar
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+    });
+}
+
+// =========================
+// GUARDAR
+// =========================
+
+async function guardar() {
+
+    const id =
+        document.getElementById("id").value;
+
+    const data = {
+
+        nombre_plato:
+            document.getElementById("nombre_plato").value,
+
+        descripcion:
+            document.getElementById("descripcion").value,
+
+        precio:
+            document.getElementById("precio").value,
+
+        categoria:
+            document.getElementById("categoria").value,
+
+        disponible:
+            document.getElementById("disponible").value === "true"
+    };
+
+    // UPDATE
+
+    if (id) {
+
+        await fetch(API + id + "/", {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+
+    }
+
+    // CREATE
+
+    else {
+
+        await fetch(API, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+    }
+
+    limpiar();
+
+    cargar();
+}
+
+// =========================
+// EDITAR
+// =========================
+
+function editar(
+    id,
+    nombre_plato,
+    descripcion,
+    precio,
+    categoria,
+    disponible
+) {
+
+    document.getElementById("id").value = id;
+
+    document.getElementById("nombre_plato").value = nombre_plato;
+
+    document.getElementById("descripcion").value = descripcion;
+
+    document.getElementById("precio").value = precio;
+
+    document.getElementById("categoria").value = categoria;
+
+    document.getElementById("disponible").value =
+        (disponible === true || disponible === "True" || disponible === "true") ? "true" : "false";
+}
+
+// =========================
+// ELIMINAR
+// =========================
+
+async function eliminar(id) {
+
+    if (confirm("¿Eliminar plato?")) {
+
+        await fetch(API + id + "/", {
+
+            method: "DELETE"
+        });
+
+        cargar();
+    }
+}
+
+// =========================
+// LIMPIAR
+// =========================
+
+function limpiar() {
+
+    document.getElementById("id").value = "";
+
+    document.getElementById("nombre_plato").value = "";
+
+    document.getElementById("descripcion").value = "";
+
+    document.getElementById("precio").value = "";
+
+    document.getElementById("categoria").value = "";
+
+    document.getElementById("disponible").value = "true";
+}
+
+// =========================
+// INICIAR
+// =========================
+
+cargar();
+
+</script>
+
+{% endblock %}

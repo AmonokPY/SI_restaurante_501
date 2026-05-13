@@ -1,0 +1,492 @@
+/* ==========================================
+   Sistema de Gestión - Restaurante Pasta La Vista
+   CSS Personalizado Moderno
+   ========================================== */
+
+:root {
+    --primary-color: #2d8659;
+    --primary-dark: #1a5c3a;
+    --primary-light: #3fa76f;
+    --secondary-color: #3d3d3d;
+    --accent-cream: #f4e8d0;
+    --accent-gold: #c9a961;
+    --bg-light: #faf8f5;
+    --bg-white: #ffffff;
+    --text-dark: #2c3e50;
+    --text-light: #6c757d;
+    --border-color: #e8e4dd;
+    --shadow-sm: 0 2px 4px rgba(0,0,0,0.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,0.12);
+    --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* RESET */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* BODY */
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #faf8f5 0%, #f0ead6 100%);
+    background-attachment: fixed;
+    color: var(--text-dark);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* HEADER */
+
+header {
+    background: linear-gradient(
+        135deg,
+        var(--primary-dark) 0%,
+        var(--primary-color) 100%
+    );
+
+    color: white;
+    padding: 2rem 1.5rem;
+    text-align: center;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+    overflow: hidden;
+}
+
+header h1 {
+    font-size: 2.2rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.header-subtitle {
+    margin-top: 0.5rem;
+    opacity: 0.95;
+    font-size: 1rem;
+    font-weight: 500;
+}
+
+/* NAV */
+
+nav {
+    background: var(--secondary-color);
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+nav a {
+    display: inline-block;
+    color: white;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition);
+}
+
+nav a:hover {
+    background: rgba(255,255,255,0.1);
+    color: var(--accent-cream);
+}
+
+.nav-user {
+    color: var(--accent-cream);
+    padding: 1rem 1rem;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.nav-logout {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    vertical-align: middle;
+}
+
+.nav-logout-btn {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    color: white;
+    margin: 0.35rem 0.75rem;
+    padding: 0.55rem 1rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.nav-logout-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: var(--accent-cream);
+    transform: none;
+    box-shadow: none;
+}
+
+/* AUTH (login / registro) */
+
+.auth-lead {
+    color: var(--text-light);
+    margin-bottom: 1.25rem;
+    max-width: 36rem;
+}
+
+.auth-footer {
+    margin-top: 1.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+    color: var(--text-light);
+}
+
+.auth-footer a {
+    color: var(--primary-color);
+    font-weight: 600;
+    text-decoration: none;
+}
+
+.auth-footer a:hover {
+    text-decoration: underline;
+}
+
+.auth-form-block--stack {
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.auth-form-block .field label {
+    display: block;
+    font-weight: 600;
+    color: var(--text-dark);
+    margin-bottom: 0.35rem;
+    text-align: left;
+}
+
+.auth-form-block .field input {
+    width: 100%;
+    max-width: 100%;
+}
+
+.auth-form-block .field .help {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 0.35rem;
+    text-align: left;
+}
+
+.form-errors,
+.field-errors {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0.75rem 1rem;
+    background: #fde8e8;
+    color: #842029;
+    border-radius: 8px;
+    border: 1px solid #f5c2c7;
+    text-align: left;
+}
+
+.field-errors {
+    margin: 0.35rem 0 0;
+    font-size: 0.9rem;
+}
+
+.messages {
+    list-style: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+}
+
+.message {
+    padding: 0.85rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.message-success {
+    background: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+}
+
+.message-error,
+.message-danger {
+    background: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
+}
+
+.message-warning {
+    background: #fff3cd;
+    color: #664d03;
+    border: 1px solid #ffecb5;
+}
+
+.message-info {
+    background: #cff4fc;
+    color: #055160;
+    border: 1px solid #b6effb;
+}
+
+/* CONTENEDOR DE PÁGINA (dentro de .contenedor) */
+
+.container {
+    width: 100%;
+}
+
+/* BLOQUE DE FORMULARIO (inputs + botón guardar) */
+
+.form-block {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    padding: 1.25rem 1rem;
+    background: var(--bg-light);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.form-block input:not([type="hidden"]),
+.form-block select,
+.form-block textarea,
+.form-block button {
+    margin: 0;
+}
+
+.form-block input[type="hidden"] {
+    display: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    width: 0;
+    height: 0;
+}
+
+/* TABLA CON SCROLL EN PANTALLAS PEQUEÑAS */
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 0.5rem;
+}
+
+/* GRID DE TARJETAS (inicio) */
+
+.cards-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.card p {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-top: 0.5rem;
+}
+
+/* CONTENEDOR */
+
+.contenedor {
+    width: 95%;
+    max-width: 1400px;
+    margin: 2rem auto;
+    background: var(--bg-white);
+    padding: 2rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-lg);
+}
+
+/* TITULOS */
+
+h2 {
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    border-bottom: 3px solid var(--primary-color);
+    padding-bottom: .5rem;
+}
+
+/* TABLAS */
+
+table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+th {
+    background: linear-gradient(
+        135deg,
+        var(--primary-color),
+        var(--primary-dark)
+    );
+
+    color: white;
+}
+
+td, th {
+    padding: 12px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+}
+
+tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+tr:hover {
+    background: #f1f1f1;
+}
+
+/* INPUTS */
+
+input,
+select,
+textarea {
+    padding: 12px;
+    margin: 5px;
+    border-radius: 8px;
+    border: 2px solid var(--border-color);
+    transition: .3s;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+/* BOTONES GENERALES */
+
+button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: var(--transition);
+    color: white;
+}
+
+/* GUARDAR */
+
+.add {
+    background: linear-gradient(
+        135deg,
+        #28a745,
+        #1e7e34
+    );
+}
+
+.add:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* EDITAR */
+
+.update {
+    background: linear-gradient(
+        135deg,
+        #ffc107,
+        #e0a800
+    );
+
+    color: #212529;
+}
+
+.update:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* ELIMINAR */
+
+.delete {
+    background: linear-gradient(
+        135deg,
+        #dc3545,
+        #b02a37
+    );
+}
+
+.delete:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* CARDS */
+
+.card {
+    display: inline-block;
+    width: 250px;
+    padding: 2rem;
+    margin: 10px;
+    background: white;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: var(--shadow-md);
+}
+
+.card h3 {
+    color: var(--primary-dark);
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+
+    nav a {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-user {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: 0.75rem 1rem;
+    }
+
+    .nav-logout {
+        display: block;
+        width: 100%;
+        text-align: center;
+    }
+
+    .nav-logout-btn {
+        width: calc(100% - 1.5rem);
+        margin: 0.25rem 0.75rem 0.75rem;
+    }
+
+    table {
+        font-size: .85rem;
+    }
+
+    .form-block {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-block input,
+    .form-block select,
+    .form-block textarea,
+    .form-block button {
+        width: 100%;
+        margin: 0;
+    }
+
+}

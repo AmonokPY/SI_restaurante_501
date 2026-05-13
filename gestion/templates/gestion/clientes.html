@@ -1,0 +1,198 @@
+{% extends 'gestion/base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+
+<h2>Clientes</h2>
+
+<div class="form-block">
+<input type="hidden" id="id">
+
+<input type="text"
+       id="nombre"
+       placeholder="Nombre">
+
+<input type="text"
+       id="telefono"
+       placeholder="Teléfono">
+
+<input type="email"
+       id="correo"
+       placeholder="Correo">
+
+<button class="add"
+        onclick="guardar()">
+
+    Guardar
+
+</button>
+</div>
+
+<div class="table-wrap">
+<table>
+
+    <thead>
+
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Teléfono</th>
+            <th>Correo</th>
+            <th>Acciones</th>
+        </tr>
+
+    </thead>
+
+    <tbody id="tabla"></tbody>
+
+</table>
+</div>
+
+</div>
+
+<script>
+
+const API = "/api/clientes/";
+
+async function cargar() {
+
+    const res = await fetch(API);
+
+    const data = await res.json();
+
+    const tabla = document.getElementById("tabla");
+
+    tabla.innerHTML = "";
+
+    data.forEach(cliente => {
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>${cliente.id}</td>
+
+            <td>${cliente.nombre}</td>
+
+            <td>${cliente.telefono}</td>
+
+            <td>${cliente.correo}</td>
+
+            <td>
+
+                <button class="update"
+                    onclick="editar(
+                        ${cliente.id},
+                        '${cliente.nombre}',
+                        '${cliente.telefono}',
+                        '${cliente.correo}'
+                    )">
+
+                    Editar
+
+                </button>
+
+                <button class="delete"
+                    onclick="eliminar(${cliente.id})">
+
+                    Eliminar
+
+                </button>
+
+            </td>
+
+        </tr>
+        `;
+    });
+}
+
+async function guardar() {
+
+    const id = document.getElementById("id").value;
+
+    const data = {
+
+        nombre:
+            document.getElementById("nombre").value,
+
+        telefono:
+            document.getElementById("telefono").value,
+
+        correo:
+            document.getElementById("correo").value
+    };
+
+    if (id) {
+
+        await fetch(API + id + "/", {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+
+    } else {
+
+        await fetch(API, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+    }
+
+    limpiar();
+
+    cargar();
+}
+
+function editar(id, nombre, telefono, correo) {
+
+    document.getElementById("id").value = id;
+
+    document.getElementById("nombre").value = nombre;
+
+    document.getElementById("telefono").value = telefono;
+
+    document.getElementById("correo").value = correo;
+}
+
+async function eliminar(id) {
+
+    if (confirm("¿Eliminar cliente?")) {
+
+        await fetch(API + id + "/", {
+
+            method: "DELETE"
+        });
+
+        cargar();
+    }
+}
+
+function limpiar() {
+
+    document.getElementById("id").value = "";
+
+    document.getElementById("nombre").value = "";
+
+    document.getElementById("telefono").value = "";
+
+    document.getElementById("correo").value = "";
+}
+
+cargar();
+
+</script>
+
+{% endblock %}

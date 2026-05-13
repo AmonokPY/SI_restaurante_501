@@ -1,0 +1,258 @@
+{% extends 'gestion/base.html' %}
+
+{% block content %}
+
+
+<div class="container">
+
+    <h2>Empleados</h2>
+
+    <div class="form-block">
+    <input type="hidden" id="id">
+
+    <input type="text"
+           id="nombre"
+           placeholder="Nombre">
+
+    <select id="cargo" title="Cargo">
+        <option value="">Cargo</option>
+        <option value="Mesero">Mesero</option>
+        <option value="Mesera">Mesera</option>
+        <option value="Cajero">Cajero</option>
+        <option value="Cajera">Cajera</option>
+        <option value="Administrador">Administrador</option>
+    </select>
+
+    <input type="text"
+           id="telefono"
+           placeholder="Teléfono">
+
+    <input type="email"
+           id="correo"
+           placeholder="Correo">
+
+    <button class="add"
+            onclick="guardar()">
+
+        Guardar
+
+    </button>
+    </div>
+
+    <div class="table-wrap">
+    <table>
+
+        <thead>
+
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Cargo</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+            </tr>
+
+        </thead>
+
+        <tbody id="tabla"></tbody>
+
+    </table>
+    </div>
+
+</div>
+
+<script>
+
+const API = "/api/empleados/";
+
+// =========================
+// CARGAR
+// =========================
+
+async function cargar() {
+
+    const res = await fetch(API);
+
+    const data = await res.json();
+
+    const tabla = document.getElementById("tabla");
+
+    tabla.innerHTML = "";
+
+    data.forEach(empleado => {
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>${empleado.id}</td>
+
+            <td>${empleado.nombre}</td>
+
+            <td>${empleado.cargo}</td>
+
+            <td>${empleado.telefono}</td>
+
+            <td>${empleado.correo}</td>
+
+            <td>
+
+                <button class="update"
+
+                    onclick="editar(
+                        ${empleado.id},
+                        '${empleado.nombre}',
+                        '${empleado.cargo}',
+                        '${empleado.telefono}',
+                        '${empleado.correo}'
+                    )">
+
+                    Editar
+
+                </button>
+
+                <button class="delete"
+
+                    onclick="eliminar(${empleado.id})">
+
+                    Eliminar
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+    });
+}
+
+// =========================
+// GUARDAR
+// =========================
+
+async function guardar() {
+
+    const id =
+        document.getElementById("id").value;
+
+    const data = {
+
+        nombre:
+            document.getElementById("nombre").value,
+
+        cargo:
+            document.getElementById("cargo").value.trim(),
+
+        telefono:
+            document.getElementById("telefono").value,
+
+        correo:
+            document.getElementById("correo").value
+    };
+
+    // UPDATE
+
+    if (id) {
+
+        await fetch(API + id + "/", {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+
+    }
+
+    // CREATE
+
+    else {
+
+        await fetch(API, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+    }
+
+    limpiar();
+
+    cargar();
+}
+
+// =========================
+// EDITAR
+// =========================
+
+function editar(
+    id,
+    nombre,
+    cargo,
+    telefono,
+    correo
+) {
+
+    document.getElementById("id").value = id;
+
+    document.getElementById("nombre").value = nombre;
+
+    document.getElementById("cargo").value = cargo || "";
+
+    document.getElementById("telefono").value = telefono;
+
+    document.getElementById("correo").value = correo;
+}
+
+// =========================
+// ELIMINAR
+// =========================
+
+async function eliminar(id) {
+
+    if (confirm("¿Eliminar empleado?")) {
+
+        await fetch(API + id + "/", {
+
+            method: "DELETE"
+        });
+
+        cargar();
+    }
+}
+
+// =========================
+// LIMPIAR
+// =========================
+
+function limpiar() {
+
+    document.getElementById("id").value = "";
+
+    document.getElementById("nombre").value = "";
+
+    document.getElementById("cargo").selectedIndex = 0;
+
+    document.getElementById("telefono").value = "";
+
+    document.getElementById("correo").value = "";
+}
+
+// =========================
+// INICIAR
+// =========================
+
+cargar();
+
+</script>
+
+{% endblock %}

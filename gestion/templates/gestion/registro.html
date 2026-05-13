@@ -1,0 +1,39 @@
+{% extends 'gestion/auth_base.html' %}
+
+{% block title %}Registro{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Crear cuenta</h2>
+    <p class="auth-lead">Registro de administrador del restaurante. Un solo rol por ahora.</p>
+
+    <form method="post" action="{% url 'registro' %}" class="auth-form" novalidate>
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <ul class="form-errors">
+                {% for err in form.non_field_errors %}<li>{{ err }}</li>{% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="form-block auth-form-block auth-form-block--stack">
+            {% for field in form %}
+                <div class="field">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<span class="help">{{ field.help_text }}</span>{% endif %}
+                    {% if field.errors %}
+                        <ul class="field-errors">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="add">Registrarse</button>
+        </div>
+    </form>
+
+    <p class="auth-footer">
+        ¿Ya tienes cuenta?
+        <a href="{% url 'ingresar' %}">Iniciar sesión</a>
+    </p>
+</div>
+{% endblock %}

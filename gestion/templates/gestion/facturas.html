@@ -1,0 +1,283 @@
+{% extends 'gestion/base.html' %}
+
+{% block content %}
+
+
+
+<div class="container">
+
+    <h2>Facturas</h2>
+
+    <div class="form-block">
+    <input type="hidden" id="id">
+
+    <input type="number"
+           id="orden_id"
+           placeholder="ID Orden"
+           min="1">
+
+    <input type="number"
+           id="subtotal"
+           placeholder="Subtotal"
+           step="0.01"
+           min="0">
+
+    <input type="number"
+           id="impuesto"
+           placeholder="Impuesto"
+           step="0.01"
+           min="0">
+
+    <input type="number"
+           id="total_factura"
+           placeholder="Total Factura"
+           step="0.01"
+           min="0">
+
+    <select id="metodo_pago" title="Método de pago">
+        <option value="Efectivo">Efectivo</option>
+        <option value="Tarjeta">Tarjeta</option>
+        <option value="Transferencia">Transferencia</option>
+        <option value="Nequi">Nequi</option>
+        <option value="Daviplata">Daviplata</option>
+    </select>
+
+    <button class="add"
+            onclick="guardar()">
+
+        Guardar
+
+    </button>
+    </div>
+
+    <div class="table-wrap">
+    <table>
+
+        <thead>
+
+            <tr>
+
+                <th>ID</th>
+                <th>ID Orden</th>
+                <th>Subtotal</th>
+                <th>Impuesto</th>
+                <th>Total</th>
+                <th>Método Pago</th>
+                <th>Acciones</th>
+
+            </tr>
+
+        </thead>
+
+        <tbody id="tabla"></tbody>
+
+    </table>
+    </div>
+
+</div>
+
+<script>
+
+const API = "/api/facturas/";
+
+// =========================
+// CARGAR
+// =========================
+
+async function cargar() {
+
+    const res = await fetch(API);
+
+    const data = await res.json();
+
+    const tabla = document.getElementById("tabla");
+
+    tabla.innerHTML = "";
+
+    data.forEach(factura => {
+
+        tabla.innerHTML += `
+
+        <tr>
+
+            <td>${factura.id}</td>
+
+            <td>${factura.orden_id}</td>
+
+            <td>${factura.subtotal}</td>
+
+            <td>${factura.impuesto}</td>
+
+            <td>${factura.total_factura}</td>
+
+            <td>${factura.metodo_pago}</td>
+
+            <td>
+
+                <button class="update"
+
+                    onclick="editar(
+                        ${factura.id},
+                        ${factura.orden_id},
+                        ${factura.subtotal},
+                        ${factura.impuesto},
+                        ${factura.total_factura},
+                        '${factura.metodo_pago}'
+                    )">
+
+                    Editar
+
+                </button>
+
+                <button class="delete"
+
+                    onclick="eliminar(${factura.id})">
+
+                    Eliminar
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+    });
+}
+
+// =========================
+// GUARDAR
+// =========================
+
+async function guardar() {
+
+    const id =
+        document.getElementById("id").value;
+
+    const data = {
+
+        orden_id:
+            document.getElementById("orden_id").value,
+
+        subtotal:
+            document.getElementById("subtotal").value,
+
+        impuesto:
+            document.getElementById("impuesto").value,
+
+        total_factura:
+            document.getElementById("total_factura").value,
+
+        metodo_pago:
+            document.getElementById("metodo_pago").value
+    };
+
+    // UPDATE
+
+    if (id) {
+
+        await fetch(API + id + "/", {
+
+            method: "PUT",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+
+    }
+
+    // CREATE
+
+    else {
+
+        await fetch(API, {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify(data)
+        });
+    }
+
+    limpiar();
+
+    cargar();
+}
+
+// =========================
+// EDITAR
+// =========================
+
+function editar(
+    id,
+    orden_id,
+    subtotal,
+    impuesto,
+    total_factura,
+    metodo_pago
+) {
+
+    document.getElementById("id").value = id;
+
+    document.getElementById("orden_id").value = orden_id;
+
+    document.getElementById("subtotal").value = subtotal;
+
+    document.getElementById("impuesto").value = impuesto;
+
+    document.getElementById("total_factura").value = total_factura;
+
+    document.getElementById("metodo_pago").value = metodo_pago;
+}
+
+// =========================
+// ELIMINAR
+// =========================
+
+async function eliminar(id) {
+
+    if (confirm("¿Eliminar factura?")) {
+
+        await fetch(API + id + "/", {
+
+            method: "DELETE"
+        });
+
+        cargar();
+    }
+}
+
+// =========================
+// LIMPIAR
+// =========================
+
+function limpiar() {
+
+    document.getElementById("id").value = "";
+
+    document.getElementById("orden_id").value = "";
+
+    document.getElementById("subtotal").value = "";
+
+    document.getElementById("impuesto").value = "";
+
+    document.getElementById("total_factura").value = "";
+
+    document.getElementById("metodo_pago").value = "Efectivo";
+}
+
+// =========================
+// INICIAR
+// =========================
+
+cargar();
+
+</script>
+
+{% endblock %}
