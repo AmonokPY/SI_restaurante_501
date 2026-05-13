@@ -1,0 +1,46 @@
+{% extends 'gestion/auth_base.html' %}
+
+{% block title %}Iniciar sesión{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Iniciar sesión</h2>
+    <p class="auth-lead">Gestión del restaurante. Solo personal autorizado.</p>
+
+    <form method="post" action="{% url 'ingresar' %}" class="auth-form" novalidate>
+        {% csrf_token %}
+        {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <ul class="form-errors">
+                {% for err in form.non_field_errors %}<li>{{ err }}</li>{% endfor %}
+            </ul>
+        {% endif %}
+
+        <div class="form-block auth-form-block">
+            <div class="field">
+                <label for="id_username">Usuario</label>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <ul class="field-errors">{% for e in form.username.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+            <div class="field">
+                <label for="id_password">Contraseña</label>
+                {{ form.password }}
+                {% if form.password.errors %}
+                    <ul class="field-errors">{% for e in form.password.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+                {% endif %}
+            </div>
+            <button type="submit" class="add">Entrar</button>
+        </div>
+    </form>
+
+    <p class="auth-footer">
+        ¿Primera vez?
+        <a href="{% url 'registro' %}">Crear cuenta de administrador</a>
+    </p>
+</div>
+{% endblock %}
